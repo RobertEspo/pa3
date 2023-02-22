@@ -14,13 +14,20 @@ library(tidyverse)
 library(languageR)
 ```
 
-```{r,"view-languageR"}
+```{r,"EDA1"}
+#Load the data set of your choice and get information about its structure.
+
 data(package="languageR")
 ?durationsGe
-durationsGe ## df is tidy
+durationsGe 
+
+## df is tidy, so skipping EDA-2 
+## (Tidy the data set (every variable gets a column, every observation occupies a single row), if necessary.)
 ```
 
-```{r,"descriptive-statistics"}
+```{r,"EDA3"}
+## Calculate descriptive statistics of your choice.
+
 ## five-number summary
 summary(durationsGe$DurationOfPrefix)
 summary(durationsGe$SpeechRate)
@@ -29,7 +36,7 @@ summary(durationsGe$SpeechRate)
 sd(durationsGe$DurationOfPrefix)
 sd(durationsGe$SpeechRate)
 
-## convert to z scores
+## convert to z scores to compare distributions
 z_scores <- durationsGe %>%
   mutate(
     z_DurationOfPrefix = (DurationOfPrefix-mean(DurationOfPrefix)/sd(DurationOfPrefix)),
@@ -37,7 +44,7 @@ z_scores <- durationsGe %>%
 z_scores
 
 ## plot z scores
-## I don't think this is particularly useful, especially on the same graph, since I'm looking at two continuous variables and I'm not looking at a group
+## I don't think this is particularly useful, especially on the same graph, since I'm looking at two continuous variables and I'm not looking at a categorical group.
 z_scores %>% 
   ggplot() +
   geom_histogram(aes(z_DurationOfPrefix),fill="red",bins=500) +
@@ -54,8 +61,9 @@ z_scores %>%
   geom_histogram(aes(z_SpeechRate),fill="blue",bins=100)
 ```
 
-```{r,"bivariate-regression"}
-## fitting the linear model
+```{r,"EDA4"}
+## Select two continuous variables and fit a model to the data (bivariate regression).
+
 summary(lm(DurationOfPrefix ~ SpeechRate,data=durationsGe))
 
 ## correlation
@@ -65,13 +73,19 @@ corr_dor_by_sr <- cor(durationsGe$DurationOfPrefix, durationsGe$SpeechRate)
 corr_dor_by_sr
 ```
 
-```{r,"plot-with-regression-line"}
+```{r,"EDA5"}
+## Generate a plot that includes a regression line.
+
 plot_duration_by_sr <- durationsGe %>% ggplot() +
   aes(x=SpeechRate,y=DurationOfPrefix) +
   geom_smooth(method="lm") +
-  geom_point()
+  geom_point() +
+  labs(title="Duration of Prefix <ge-> by Speech Rate")
 plot_duration_by_sr
 ```
+
+# EDA6
+## Write up some general observations (1-2 paragraphs max)
 
 I wanted to investigate the relationship between speech rate and the duration of the Dutch prefix <ge->. To do this, I fit a linear model to the two variables, running the duration of the prefix as a function of speech rate. The model displayed a negative relationship: as speech rate increases, the duration of the prefix decreases. The correlation was not particularly strong at `r corr_dor_by_sr`. 
 

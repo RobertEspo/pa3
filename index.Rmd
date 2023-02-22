@@ -73,6 +73,6 @@ plot_duration_by_sr <- durationsGe %>% ggplot() +
 plot_duration_by_sr
 ```
 
-I wanted to investigate the relationship between speech rate and the duration of the Dutch prefix <ge->. To do this, I fit a linear model to the two variables, running the duration of the prefix as a function of speech rate. The model displayed a negative relationship: as speech rate increases, the duration of the prefix decreases. The correlation was not particularly strong at `r corr_prefix_by_speechrate`. 
+I wanted to investigate the relationship between speech rate and the duration of the Dutch prefix <ge->. To do this, I fit a linear model to the two variables, running the duration of the prefix as a function of speech rate. The model displayed a negative relationship: as speech rate increases, the duration of the prefix decreases. The correlation was not particularly strong at `r corr_dor_by_sr`. 
 
 However, the summary statistics for the linear model show that there is a significant relationship (p<.001) between the two variables. It is surprising to me that the correlation can be so low, but the p-value for the linear model can be significant at such a confidence interval. I would be interested to know if certain affixes or parts of speech are more or less resistant to change based on speech rate.

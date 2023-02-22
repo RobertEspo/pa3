@@ -1,0 +1,78 @@
+---
+title: "index"
+author: "Robert Esposito"
+date: "2023-02-22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r,"load-libraries"}
+library(tidyverse)
+library(languageR)
+```
+
+```{r,"view-languageR"}
+data(package="languageR")
+?durationsGe
+durationsGe ## df is tidy
+```
+
+```{r,"descriptive-statistics"}
+## five-number summary
+summary(durationsGe$DurationOfPrefix)
+summary(durationsGe$SpeechRate)
+
+## standard deviation
+sd(durationsGe$DurationOfPrefix)
+sd(durationsGe$SpeechRate)
+
+## convert to z scores
+z_scores <- durationsGe %>%
+  mutate(
+    z_DurationOfPrefix = (DurationOfPrefix-mean(DurationOfPrefix)/sd(DurationOfPrefix)),
+    z_SpeechRate = (SpeechRate-mean(SpeechRate)/sd(SpeechRate)))
+z_scores
+
+## plot z scores
+## I don't think this is particularly useful, especially on the same graph, since I'm looking at two continuous variables and I'm not looking at a group
+z_scores %>% 
+  ggplot() +
+  geom_histogram(aes(z_DurationOfPrefix),fill="red",bins=500) +
+  geom_histogram(aes(z_SpeechRate),fill="blue",bins=100) +
+  labs(x=NULL)
+
+## the same plots, but more readable
+z_scores %>% 
+  ggplot() +
+  geom_histogram(aes(z_DurationOfPrefix),fill="red")
+
+z_scores %>% 
+  ggplot() +
+  geom_histogram(aes(z_SpeechRate),fill="blue",bins=100)
+```
+
+```{r,"bivariate-regression"}
+## fitting the linear model
+summary(lm(DurationOfPrefix ~ SpeechRate,data=durationsGe))
+
+## correlation
+## dor = duration of prefix
+## sr = speech rate
+corr_dor_by_sr <- cor(durationsGe$DurationOfPrefix, durationsGe$SpeechRate)
+corr_dor_by_sr
+```
+
+```{r,"plot-with-regression-line"}
+plot_duration_by_sr <- durationsGe %>% ggplot() +
+  aes(x=SpeechRate,y=DurationOfPrefix) +
+  geom_smooth(method="lm") +
+  geom_point()
+plot_duration_by_sr
+```
+
+I wanted to investigate the relationship between speech rate and the duration of the Dutch prefix <ge->. To do this, I fit a linear model to the two variables, running the duration of the prefix as a function of speech rate. The model displayed a negative relationship: as speech rate increases, the duration of the prefix decreases. The correlation was not particularly strong at `r corr_prefix_by_speechrate`. 
+
+However, the summary statistics for the linear model show that there is a significant relationship (p<.001) between the two variables. It is surprising to me that the correlation can be so low, but the p-value for the linear model can be significant at such a confidence interval. I would be interested to know if certain affixes or parts of speech are more or less resistant to change based on speech rate.

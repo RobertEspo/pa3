@@ -8,23 +8,26 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
+# Load Libraries
 ```{r,"load-libraries"}
 library(tidyverse)
 library(languageR)
 ```
 
+# EDA 1
 ```{r,"EDA1"}
 #Load the data set of your choice and get information about its structure.
 
 data(package="languageR")
 ?durationsGe
 durationsGe 
-
-## df is tidy, so skipping EDA-2 
-## (Tidy the data set (every variable gets a column, every observation occupies a single row), if necessary.)
 ```
+# EDA 2
+## Tidy the data set (every variable gets a column, every observation occupies a single row), if necessary.
 
+The DF I have chosen, durationsGe, is already tidy.
+
+# EDA 3
 ```{r,"EDA3"}
 ## Calculate descriptive statistics of your choice.
 
@@ -61,6 +64,7 @@ z_scores %>%
   geom_histogram(aes(z_SpeechRate),fill="blue",bins=100)
 ```
 
+# EDA 4
 ```{r,"EDA4"}
 ## Select two continuous variables and fit a model to the data (bivariate regression).
 
@@ -73,6 +77,7 @@ corr_dor_by_sr <- cor(durationsGe$DurationOfPrefix, durationsGe$SpeechRate)
 corr_dor_by_sr
 ```
 
+# EDA 5
 ```{r,"EDA5"}
 ## Generate a plot that includes a regression line.
 
